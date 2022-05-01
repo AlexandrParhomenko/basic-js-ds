@@ -1,6 +1,6 @@
 const { NotImplementedError } = require('../extensions/index.js');
 
-// const { ListNode } = require('../extensions/list-node.js');
+const { ListNode } = require('../extensions/list-node.js');
 
 /**
  * Implement the Queue with a given interface via linked list (use ListNode extension above).
@@ -13,94 +13,33 @@ const { NotImplementedError } = require('../extensions/index.js');
  * queue.dequeue(); // returns the top element from queue and deletes it, returns 1
  * queue.getUnderlyingList() // returns { value: 3, next: null }
  */
-class BinarySearchTree {
+class Queue {
   constructor() {
-    this._root = null;
+    this.head = null;
+    this.tail = null;
   }
 
-  root() {
-    return this._root;
+  getUnderlyingList() {
+    return this.head;
   }
 
-  add(data) {
-    function addWithin(node, data) {
-      if (!node) {
-        return new Node(data);
-      }
+  enqueue(el) {
+    let node = new ListNode(el);
 
-      if (node.data === data) {
-        return node;
-      }
-
-      if (data < node.data) {
-        node.left = addWithin(node.left, data);
-      } else {
-        node.right = addWithin(node.right, data);
-      }
-
-      return node;
+    if (!this.head) {
+      this.head = node;
+      this.tail = node;
+    } else {
+      this.tail.next = node;
+      this.tail = node;
     }
-
-    this._root  = addWithin(this._root , data);
   }
 
-  find(data) {
-    function search(node, data) {
-      if (!node) {
-        return null;
-      }
+  dequeue() {
+    let head = this.head;
+    this.head = this.head.next;
 
-      if (node.data === data) {
-        return node;
-      }
-
-      return data < node.data ? search(node.left, data) : search(node.right, data);
-    }
-
-    return search(this._root , data);
-  }
-
-  remove(data) {
-    function removeNode(node, data) {
-      if (!node) {
-        return null;
-      }
-
-      if (data < node.data) {
-        node.left = removeNode(node.left, data);
-        return node;
-      } else if (data > node.data) {
-        node.right = removeNode(node.right, data);
-        return node;
-      } else {
-        if (!node.left && !node.right) {
-          return null;
-        }
-
-        if (!node.left) {
-          node = node.right;
-          return node;
-        }
-
-        if (!node.right) {
-          node = node.left;
-          return node;
-        }
-
-        let maxFromLeft = node.left;
-
-        while (maxFromLeft.right) {
-          maxFromLeft = maxFromLeft.right;
-        }
-        node.data = maxFromLeft.data;
-
-        node.left = removeNode(node.left, maxFromLeft.data);
-
-        return node;
-      }
-    }
-
-    this._root  = removeNode(this._root , data);
+    return head.value;
   }
 }
 
